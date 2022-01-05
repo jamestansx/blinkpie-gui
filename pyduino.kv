@@ -1,0 +1,46 @@
+<SetupScreen>:
+	BoxLayout:
+		orientation: 'vertical'
+		TextInput:
+			id: ip_input
+			text: "Enter your PC's ip address"
+		Button:
+			text: 'Submit'
+			on_press: 
+				root.manager.transition.direction = 'right'
+				root.manager.current = 'main'
+			on_release: root.setting()
+
+<MainScreen>:
+	BoxLayout:
+		orientation: 'vertical'
+		Widget:
+		BoxLayout:
+			orientation: 'horizontal'
+			size_hint: 1, None
+			Label:
+				id: get_message 
+				text: str(root.gettext)
+				size_hint: 1, None
+			TextInput:
+				id: post_text
+				text: 'Put message here'
+				size_hint: 1, None
+		Button:
+			text: 'GET'
+			size_hint: 1, None
+			on_release: root.do_get(None)
+		Button:
+			text: 'POST'
+			size_hint: 1, None
+			on_release: root.do_post()
+		BoxLayout:
+			orientation: 'horizontal'
+			size_hint: 1, None
+		Button:
+			text: 'Settings'
+			size_hint: 1, None
+			on_press: 
+				root.manager.transition.direction = 'left'
+				root.manager.current = 'setup'
+		Widget:
