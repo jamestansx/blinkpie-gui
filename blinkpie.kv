@@ -1,0 +1,412 @@
+#:kivy 2.0.0
+
+#: import Clock kivy.clock.Clock
+#: import Factory kivy.factory.Factory
+
+ScreenManager:
+    MenuScreen:
+        name: 'menu_screen'
+        id: menu_screen
+    NewProjectScreen:
+        name: 'newproject_screen'
+        id: newproject_screen
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    with_previous: True
+                    on_release: app.root.current = 'menu_screen'
+    SelectProjectScreen:
+        name: 'selectproject_screen'
+        id: selectproject_screen
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    with_previous: True
+                    on_release: app.root.current = 'menu_screen'
+    MainScreen:
+        name: 'main_screen'
+        id: main_screen
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    with_previous: True
+                    on_release: app.root.current = 'menu_screen'
+
+<MenuScreen>:
+    GridLayout:
+        cols: 1
+        rows: 4
+        AnchorLayout:
+            size_hint_y: None
+            anchor_x: "right"
+            anchor_y: "top"
+            Button:
+                size_hint: None, None
+                size: dp(80),dp(50)
+                on_release: Factory.SetupIpWidget().open(self)
+                Image:
+                    source: 'settings.png'
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    size: dp(80), dp(50)
+                    allow_stretch: True
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "bottom"
+            Button:
+                size_hint: .5, .5
+                text: 'New Project'
+                on_release:
+                    app.root.current = 'newproject_screen'
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            Button:
+                size_hint: .5, .5
+                text: 'Project List'
+                on_release:
+                    app.root.current = 'selectproject_screen'
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            Button:
+                size_hint: .5, .5
+                text: 'About'
+                disabled: True
+
+
+
+<NewProjectScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.pos
+        size: root.size
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "top"
+            Button:
+                size_hint: None, None
+                size: dp(150),dp(50)
+                text: 'Generate new UUID'
+                on_release:
+                    root.genUUID()
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "bottom"
+            BoxLayout:
+                size_hint: .8, .5
+                orientation: 'horizontal'
+                Label:
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+                    text: 'UUID'
+                TextInput:
+                    id: UUID
+                    size_hint: 1, None
+                    hint_text: 'UUID'
+                    text: root.uuid_value
+                    focus: True
+                    padding: [10, 5]
+                    text_size: self.width, None
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "bottom"
+            BoxLayout:
+                size_hint: .8, .5
+                orientation: 'horizontal'
+                Label:
+                    text: 'Project title'
+                TextInput:
+                    id: project_title
+                    hint_text: 'Project Name'
+                    multiline: False
+                    focus: True
+                    padding: [10, 5]
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            BoxLayout:
+                size_hint: .8, .5
+                orientation: 'horizontal'
+                Label:
+                    text: 'Name'
+                TextInput:
+                    id: device_name
+                    hint_text: 'Device Name'
+                    multiline: False
+                    focus: True
+                    padding: [10, 5]
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: .8, .5
+                Label:
+                    text: 'Description'
+                TextInput:
+                    id: description
+                    hint_text: 'Optional'
+                    multiline: False
+                    focus: True
+                    padding: [10, 5]
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            Button:
+                size_hint: .8, .5
+                text: 'Create!'
+                on_release:
+                    root.create_project()
+                    app.root.current = 'main_screen'
+
+
+<SelectProjectScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.pos
+        size: root.size
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            Button:
+                id: mainbutton
+                text: 'Projects'
+                size_hint: .8, .5
+                padding: [10, 5]
+                on_release: Factory.ProjectList().open(self)
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                size_hint: 1, None
+                halign: 'center'
+                valign: 'center'
+                height: self.texture_size[1]
+                text: 'UUID'
+            Label:
+                id: UUID
+                text_size: self.width, None
+                size_hint: 1, None
+                halign: 'center'
+                valign: 'center'
+                height: self.texture_size[1]
+                text: root.ids.UUID.text
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text_size: self.width, None
+                size_hint: 1, None
+                halign: 'center'
+                valign: 'center'
+                height: self.texture_size[1]
+                text: 'Device Name'
+            Label:
+                text_size: self.width, None
+                size_hint: 1, None
+                height: self.texture_size[1]
+                halign: 'center'
+                valign: 'center'
+                id: device_name
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text_size: self.width, None
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+                    halign: 'center'
+                    valign: 'top'
+                    text: 'Description'
+                Label:
+                    text_size: self.width, None
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+                    padding: [10, 5]
+                    id: description
+                    halign: 'center'
+                    valign: 'center'
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "top"
+            Button:
+                id: open_project
+                text: 'Select'
+                size_hint: .8, .5
+                on_release:
+                    Clock.schedule_once(lambda dt:Factory.ProjectList().open_project(self)) if root.ids.open_project != "project" else None
+
+<MainScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.pos
+        size: root.size
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .1
+            AnchorLayout:
+                anchor_x: "center"
+                anchor_y: "center"
+                Label:
+                    text: root.project
+                    text_size: self.width, None
+                    halign: 'center'
+                    valign: 'center'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+            AnchorLayout:
+                anchor_x: "right"
+                anchor_y: "top"
+                size_hint: None, 1
+                Button:
+                    size_hint: None, None
+                    size: dp(80),dp(50)
+                    on_release: Factory.SetupIpWidget().open(self)
+                    Image:
+                        source: 'settings.png'
+                        center_x: self.parent.center_x
+                        center_y: self.parent.center_y
+                        size: dp(80), dp(50)
+                        allow_stretch: True
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1,.3
+            canvas.before:
+                Color:
+                    rgba: 0, 1, 0, .5
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                size_hint: 1, None
+                height: self.texture_size[1]
+                halign: 'center'
+                text: 'Status'
+            GridLayout:
+                spacing: 1
+                cols: 2
+                rows: 3
+                Label:
+                    text: "Temperature"
+                Label:
+                    text: "{}".format(root.get_data[0]) if root.get_data[0] else "connecting..."
+                Label:
+                    text: "Rain"
+                Label:
+                    text: "{}".format(root.get_data[1]) if root.get_data[1] != '' else "connecting..."
+                Label:
+                    text: "Lighting"
+                Label:
+                    text: "{}".format(root.get_data[2]) if root.get_data[2] else "connecting..."
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .4
+            pos: self.pos
+            size: root.size
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: .4, 1
+                canvas:
+                    Color:
+                        rgba: 0, .1, 1,.1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    text: "LED Switch"
+                Switch:
+                    id: led_switch
+                    orientation: 'vertical'
+                    active:
+                        True if "{}".format(root.get_data[4]) == "ON" else False
+                    on_active:
+                        root.switch_call(self, self.active)
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: .6, 1
+                canvas:
+                    Color:
+                        rgba: 0, .1, .8,.1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    text: "Windows angle"
+                Slider:
+                    id: windows_angle 
+                    orientation: 'horizontal'
+                    min: 0
+                    max: 100
+                    step: 1
+                    on_touch_up:
+                        root._do_post("data", "windows", str(windows_angle.value))
+
+
+<SetupIpWidget>:
+    auto_dismiss: False
+    title: 'Host IP setup'
+    BoxLayout:
+        orientation: 'vertical'
+        pos: self.pos
+        size: root.size
+        BoxLayout:
+            orientation: 'horizontal'
+            TextInput:
+                id: ip_input
+                hint_text: 'Input Host IP address here'
+                multiline: False
+                focus: True
+                padding: [10, 5]
+                on_focus:
+                    Clock.schedule_once(lambda dt: self.select_all()) if self.focus else None
+        BoxLayout:
+            orientation:'horizontal'
+            Button:
+                id: ip_button
+                text: 'Submit'
+                on_release:
+                    root.dismiss()
+
+<ProjectList>:
+    on_select:
+        app.root.ids.selectproject_screen.ids.mainbutton.text = '{}'.format(args[1])
+
+<AuthError>:
+    message: message
+    auto_dismiss: False
+    title: "Error!"
+    size_hint: None, None
+    width: grid.width + dp(25)
+    height: grid.height + root.title_size + dp(48)
+
+    GridLayout:
+        id: grid
+        size_hint: None, None
+        size: self.minimum_size
+        padding: [10, 5]
+        cols: 1
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "bottom"
+            size_hint: None, None
+            height: message.height
+            width: max(message.width, butt.width)
+            Label:
+                id: message
+                size_hint: None, None
+                size: self.texture_size
+                padding: [10, 5]
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "bottom"
+            size_hint: None, None
+            height: butt.height
+            width: max(message.width, butt.width)
+            Button:
+                id: butt
+                text: 'Close'
+                size_hint: None, None
+                size: self.texture_size
+                padding: [10, 5]
+                on_release: root.dismiss()
